@@ -5,6 +5,7 @@ if [[ -z "${DEVKITPRO:-}" ]]; then
   exit 1
 fi
 export DEVKITARM="${DEVKITARM:-$DEVKITPRO/devkitARM}"
+export PATH="$DEVKITARM/bin:$PATH"
 export LIBNDS="${LIBNDS:-$DEVKITPRO/libnds}"
 export LIBFAT="${LIBFAT:-$DEVKITPRO/libnds}"
 for f in "$DEVKITARM/bin/arm-none-eabi-gcc" "$DEVKITARM/ds_rules" "$LIBNDS/include/nds.h" "$LIBFAT/include/fat.h"; do
