@@ -6,7 +6,7 @@ if [[ -z "${DEVKITPRO:-}" ]]; then
 fi
 export DEVKITARM="${DEVKITARM:-$DEVKITPRO/devkitARM}"
 export LIBNDS="${LIBNDS:-$DEVKITPRO/libnds}"
-export LIBFAT="${LIBFAT:-$DEVKITPRO/libfat}"
+export LIBFAT="${LIBFAT:-$DEVKITPRO/libnds}"
 for f in "$DEVKITARM/bin/arm-none-eabi-gcc" "$DEVKITARM/ds_rules" "$LIBNDS/include/nds.h" "$LIBFAT/include/fat.h"; do
   if [[ ! -e "$f" ]]; then echo "Missing dependency: $f" >&2; exit 1; fi
 done
