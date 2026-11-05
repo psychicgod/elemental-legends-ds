@@ -17,11 +17,13 @@ jobs:
       - name: Download game source
         uses: actions/checkout@v4
 
-      
-      - name: Install DS libraries
+      - name: Check installed DS libraries
         run: |
-          dkp-pacman -Sy --noconfirm --needed nds-dev
+          echo "Checking installed devkitPro files..."
           find /opt/devkitpro -name fat.h -print
+          find /opt/devkitpro -name nds.h -print
+          find /opt/devkitpro -name ds_rules -print
+
 
       - name: Compile ROM
 
