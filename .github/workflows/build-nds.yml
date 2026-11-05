@@ -1,0 +1,35 @@
+name: Build Elemental Legends DS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:latest
+    steps:
+      - name: Download game source
+        uses: actions/checkout@v4
+
+      - name: Install DS libraries
+        run: dkp-pacman -Sy --noconfirm --needed nds-dev
+
+      - name: Compile ROM
+        env:
+          DEVKITPRO: /opt/devkitpro
+          DEVKITARM: /opt/devkitpro/devkitARM
+        run: |
+          chmod +x build.sh
+          ./build.sh
+          test -s elemental_legends.nds
+
+      - name: Upload ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: Elemental-Legends-DS-ROM
+          path: elemental_legends.nds
+          if-no-files-found: error
