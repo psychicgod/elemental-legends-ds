@@ -1,6 +1,8 @@
 name: Build Elemental Legends DS
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
