@@ -1,3 +1,4 @@
+export PATH := $(DEVKITARM)/bin:$(PATH)
 # Standard devkitPro / libnds template compatible build
 ifeq ($(strip $(DEVKITARM)),)
 $(error DEVKITARM is not set. Install devkitPro nds-dev and source devkitpro environment)
