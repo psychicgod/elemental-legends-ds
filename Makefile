@@ -3,6 +3,13 @@ export PATH := $(DEVKITARM)/bin:$(PATH)
 ifeq ($(strip $(DEVKITARM)),)
 $(error DEVKITARM is not set. Install devkitPro nds-dev and source devkitpro environment)
 endif
+export PATH := $(DEVKITARM)/bin:$(PATH)
+export CC := $(DEVKITARM)/bin/arm-none-eabi-gcc
+export CXX := $(DEVKITARM)/bin/arm-none-eabi-g++
+export AS := $(DEVKITARM)/bin/arm-none-eabi-as
+export LD := $(DEVKITARM)/bin/arm-none-eabi-g++
+export AR := $(DEVKITARM)/bin/arm-none-eabi-ar
+export OBJCOPY := $(DEVKITARM)/bin/arm-none-eabi-objcopy
 include $(DEVKITARM)/ds_rules
 TARGET := elemental_legends
 BUILD := build
