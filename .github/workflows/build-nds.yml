@@ -17,10 +17,14 @@ jobs:
       - name: Download game source
         uses: actions/checkout@v4
 
+      
       - name: Install DS libraries
-        run: dkp-pacman -Sy --noconfirm --needed nds-dev
+        run: |
+          dkp-pacman -Sy --noconfirm --needed nds-dev
+          find /opt/devkitpro -name fat.h -print
 
       - name: Compile ROM
+
         env:
           DEVKITPRO: /opt/devkitpro
           DEVKITARM: /opt/devkitpro/devkitARM
