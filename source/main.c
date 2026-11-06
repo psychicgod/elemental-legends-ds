@@ -1,4 +1,5 @@
 #include <nds.h>
+#include <nds/arm9/background.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
