@@ -159,30 +159,18 @@ static void touchAction(int x,int y){if(mode==MODE_WORLD){if(y>=50&&y<82){mode=x
 
 
 int main(void) {
-    powerOn(POWER_ALL_2D);
+    consoleDemoInit();
 
-    vramSetBankA(VRAM_A_LCD);
-    vramSetBankC(VRAM_C_SUB_BG);
-
-    videoSetMode(MODE_FB0);
-    videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
-
-    int subBg = bgInitSub(
-        3,
-        BgType_Bmp16,
-        BgSize_B16_256x256,
-        0,
-        0
-    );
-
-    top = (u16 *)VRAM_A;
-    bottom = (u16 *)bgGetGfxPtr(subBg);
-
-    lcdMainOnTop();
+    iprintf("ELEMENTAL LEGENDS DS\n\n");
+    iprintf("BOOT TEST SUCCESSFUL\n\n");
+    iprintf("Press A to continue\n");
 
     while (1) {
-        rect(top, 0, 0, 256, 192, RGB(31, 0, 0));
-        rect(bottom, 0, 0, 256, 192, RGB(0, 0, 31));
+        scanKeys();
+
+        if (keysDown() & KEY_A) {
+            iprintf("\nA BUTTON WORKS!\n");
+        }
 
         swiWaitForVBlank();
     }
