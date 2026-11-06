@@ -1,4 +1,3 @@
-export PATH := $(DEVKITARM)/bin:$(PATH)
 # Standard devkitPro / libnds template compatible build
 ifeq ($(strip $(DEVKITARM)),)
 $(error DEVKITARM is not set. Install devkitPro nds-dev and source devkitpro environment)
@@ -32,7 +31,7 @@ export VPATH := $(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 export DEPSDIR := $(CURDIR)/$(BUILD)
 
 export INCLUDE := $(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) -I$(CURDIR)/$(BUILD) $(foreach dir,$(LIBDIRS),-I$(dir)/include)
-,-I$(CURDIR)/$(dir)) -I$(CURDIR)/$(BUILD)
+
 export LIBPATHS := $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 export OFILES := $(addsuffix .o,$(basename $(notdir $(wildcard $(SOURCES)/*.c))))
 .PHONY: $(BUILD) clean
