@@ -197,20 +197,4 @@ int main(void) {
     }
 
     return 0;
-}
-
-            questRender();
-        } else if (mode == MODE_FAINT) {
-            worldRender();
-            rect(top, 8, 70, 240, 45, RGB(7, 2, 4));
-            txt(top, 18, 86,
-                "FAINTED - PRESS START",
-                RGB(31, 20, 20), 1);
-        }
-
-        frame++;
-        swiWaitForVBlank();
-    }
-
-    return 0;
-}
+  }
