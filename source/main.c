@@ -12,7 +12,8 @@
 #define MAPW 32
 #define MAPH 24
 #define RGB(r,g,b) RGB15(r,g,b)
-static u16 *top=(u16*)VRAM_A, *bottom=(u16*)VRAM_C;
+static u16 *top = NULL;
+static u16 *bottom = NULL;
 static int mode=0, px=3,py=3, facing=0, frame=0, level=1, hp=120,chi=100, foeHP=0,foeMax=0,foe=0,element=0,avatar=0,herbs=3,balls=6, captured=0, steps=0, wins=0;
 static char msg[80]="Explore the Spirit Grove";
 static const char *enames[]={"AIR","WATER","EARTH","FIRE"};
@@ -154,6 +155,91 @@ static void touchAction(int x,int y){if(mode==MODE_WORLD){if(y>=50&&y<82){mode=x
  else if(mode==MODE_QUEST){if(y>=139)mode=MODE_WORLD;}
  else if(mode==MODE_FAINT)keyAction(KEY_START);
 }
-int main(void){powerOn(POWER_ALL_2D);videoSetMode(MODE_FB0);videoSetModeSub(MODE_FB0);vramSetBankA(VRAM_A_LCD);vramSetBankC(VRAM_C_LCD);lcdMainOnTop();srand(137);saveReady=fatInitDefault();resetGame();if(saveReady&&loadGame())setMsg("SAVE LOADED");else setMsg(saveReady?"NEW ADVENTURE":"SAVE NEEDS FAT STORAGE");
- while(1){scanKeys();int k=keysDown();if(k&KEY_TOUCH){touchPosition p;touchRead(&p);touchAction(p.px,p.py);}keyAction(k&~KEY_TOUCH);
- if(mode==MODE_WORLD)worldRender();else if(mode==MODE_BATTLE)battleRender();else if(mode==MODE_DIALOG)dialogueRender();else if(mode==MODE_PARTY)partyRender();else if(mode==MODE_QUEST)questRender();else if(mode==MODE_FAINT){worldRender();rect(top,8,70,240,45,RGB(7,2,4));txt(top,18,86,"FAINTED - PRESS START",RGB(31,20,20),1);}frame++;swiWaitForVBlank();}return 0;}
+
+int main(void) {
+    powerOn(POWER_ALL_2D);
+
+    // Configure both screens for 16-bit bitmap backgrounds.
+    videoSetMode(MODE_5_2D);
+    videoSetModeSub(MODE_5_2D);
+
+    vramSetBankA(VRAM_A_MAIN_BG);
+    vramSetBankC(VRAM_C_SUB_BG);
+
+    // Background layer 3 on each screen.
+    int mainBg = bgInit(
+        3,
+        BgType_Bmp16,
+        BgSize_B16_256x256,
+        0,
+        0
+    );
+
+    int subBg = bgInitSub(
+        3,
+        BgType_Bmp16,
+        BgSize_B16_256x256,
+        0,
+        0
+    );
+
+    // Obtain the actual displayable bitmap buffers.
+    top = (u16 *)bgGetGfxPtr(mainBg);
+    bottom = (u16 *)bgGetGfxPtr(subBg);
+
+    lcdMainOnTop();
+    srand(137);
+
+    resetGame();
+
+    // Draw a visible frame before attempting FAT initialization.
+    setMsg("ELEMENTAL LEGENDS STARTING");
+    worldRender();
+    swiWaitForVBlank();
+
+    saveReady = fatInitDefault();
+
+    if (saveReady && loadGame()) {
+        setMsg("SAVE LOADED");
+    } else {
+        setMsg(saveReady
+            ? "NEW ADVENTURE"
+            : "SAVE NEEDS FAT STORAGE");
+    }
+
+    while (1) {
+        scanKeys();
+        int k = keysDown();
+
+        if (k & KEY_TOUCH) {
+            touchPosition p;
+            touchRead(&p);
+            touchAction(p.px, p.py);
+        }
+
+        keyAction(k & ~KEY_TOUCH);
+
+        if (mode == MODE_WORLD) {
+            worldRender();
+        } else if (mode == MODE_BATTLE) {
+            battleRender();
+        } else if (mode == MODE_DIALOG) {
+            dialogueRender();
+        } else if (mode == MODE_PARTY) {
+            partyRender();
+        } else if (mode == MODE_QUEST) {
+            questRender();
+        } else if (mode == MODE_FAINT) {
+            worldRender();
+            rect(top, 8, 70, 240, 45, RGB(7, 2, 4));
+            txt(top, 18, 86,
+                "FAINTED - PRESS START",
+                RGB(31, 20, 20), 1);
+        }
+
+        frame++;
+        swiWaitForVBlank();
+    }
+
+    return 0;
+}
