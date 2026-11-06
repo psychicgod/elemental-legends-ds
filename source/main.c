@@ -161,40 +161,31 @@ static void touchAction(int x,int y){if(mode==MODE_WORLD){if(y>=50&&y<82){mode=x
 int main(void) {
     powerOn(POWER_ALL_2D);
 
-    videoSetMode(MODE_5_2D | DISPLAY_BG3_ACTIVE);
-videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
-
-    vramSetBankA(VRAM_A_MAIN_BG);
+    vramSetBankA(VRAM_A_LCD);
     vramSetBankC(VRAM_C_SUB_BG);
 
-    int mainBg = bgInit(
-        3, BgType_Bmp16,
-        BgSize_B16_256x256, 0, 0
-    );
+    videoSetMode(MODE_FB0);
+    videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
 
     int subBg = bgInitSub(
-        3, BgType_Bmp16,
-        BgSize_B16_256x256, 0, 0
+        3,
+        BgType_Bmp16,
+        BgSize_B16_256x256,
+        0,
+        0
     );
 
-    top = (u16 *)bgGetGfxPtr(mainBg);
+    top = (u16 *)VRAM_A;
     bottom = (u16 *)bgGetGfxPtr(subBg);
 
     lcdMainOnTop();
 
-    // Diagnostic colors: no FAT, no game logic.
     while (1) {
-        swiWaitForVBlank();
-
-        rect(top, 0, 0, 256, 192, RGB(0, 31, 0));
+        rect(top, 0, 0, 256, 192, RGB(31, 0, 0));
         rect(bottom, 0, 0, 256, 192, RGB(0, 0, 31));
 
-        txt(top, 30, 80, "GRAPHICS TEST",
-            RGB(31, 31, 31), 2);
-
-        txt(bottom, 30, 80, "BOTTOM SCREEN",
-            RGB(31, 31, 31), 2);
+        swiWaitForVBlank();
     }
 
     return 0;
-  }
+}
