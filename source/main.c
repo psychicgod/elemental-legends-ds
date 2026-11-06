@@ -161,8 +161,8 @@ static void touchAction(int x,int y){if(mode==MODE_WORLD){if(y>=50&&y<82){mode=x
 int main(void) {
     powerOn(POWER_ALL_2D);
 
-    videoSetMode(MODE_5_2D);
-    videoSetModeSub(MODE_5_2D);
+    videoSetMode(MODE_5_2D | DISPLAY_BG3_ACTIVE);
+videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
 
     vramSetBankA(VRAM_A_MAIN_BG);
     vramSetBankC(VRAM_C_SUB_BG);
