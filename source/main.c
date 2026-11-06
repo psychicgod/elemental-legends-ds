@@ -157,78 +157,48 @@ static void touchAction(int x,int y){if(mode==MODE_WORLD){if(y>=50&&y<82){mode=x
  else if(mode==MODE_FAINT)keyAction(KEY_START);
 }
 
+
 int main(void) {
     powerOn(POWER_ALL_2D);
 
-    // Configure both screens for 16-bit bitmap backgrounds.
     videoSetMode(MODE_5_2D);
     videoSetModeSub(MODE_5_2D);
 
     vramSetBankA(VRAM_A_MAIN_BG);
     vramSetBankC(VRAM_C_SUB_BG);
 
-    // Background layer 3 on each screen.
     int mainBg = bgInit(
-        3,
-        BgType_Bmp16,
-        BgSize_B16_256x256,
-        0,
-        0
+        3, BgType_Bmp16,
+        BgSize_B16_256x256, 0, 0
     );
 
     int subBg = bgInitSub(
-        3,
-        BgType_Bmp16,
-        BgSize_B16_256x256,
-        0,
-        0
+        3, BgType_Bmp16,
+        BgSize_B16_256x256, 0, 0
     );
 
-    // Obtain the actual displayable bitmap buffers.
     top = (u16 *)bgGetGfxPtr(mainBg);
     bottom = (u16 *)bgGetGfxPtr(subBg);
 
     lcdMainOnTop();
-    srand(137);
 
-    resetGame();
+    // Diagnostic colors: no FAT, no game logic.
+    while (1) {
+        swiWaitForVBlank();
 
-    // Draw a visible frame before attempting FAT initialization.
-    setMsg("ELEMENTAL LEGENDS STARTING");
-    worldRender();
-    swiWaitForVBlank();
+        rect(top, 0, 0, 256, 192, RGB(0, 31, 0));
+        rect(bottom, 0, 0, 256, 192, RGB(0, 0, 31));
 
-    saveReady = fatInitDefault();
+        txt(top, 30, 80, "GRAPHICS TEST",
+            RGB(31, 31, 31), 2);
 
-    if (saveReady && loadGame()) {
-        setMsg("SAVE LOADED");
-    } else {
-        setMsg(saveReady
-            ? "NEW ADVENTURE"
-            : "SAVE NEEDS FAT STORAGE");
+        txt(bottom, 30, 80, "BOTTOM SCREEN",
+            RGB(31, 31, 31), 2);
     }
 
-    while (1) {
-        scanKeys();
-        int k = keysDown();
+    return 0;
+}
 
-        if (k & KEY_TOUCH) {
-            touchPosition p;
-            touchRead(&p);
-            touchAction(p.px, p.py);
-        }
-
-        keyAction(k & ~KEY_TOUCH);
-
-        if (mode == MODE_WORLD) {
-            worldRender();
-        } else if (mode == MODE_BATTLE) {
-            battleRender();
-        } else if (mode == MODE_DIALOG) {
-            dialogueRender();
-        } else if (mode == MODE_PARTY) {
-            partyRender();
-        } else if (mode == MODE_QUEST) {
             questRender();
         } else if (mode == MODE_FAINT) {
             worldRender();
